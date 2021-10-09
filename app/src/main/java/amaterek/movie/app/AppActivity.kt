@@ -1,5 +1,6 @@
 package amaterek.movie.app
 
+import amaterek.movie.app.navigation.AppNavigation
 import amaterek.movie.theme.AppTheme
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -13,7 +14,7 @@ class AppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-
+                AppNavigation()
             }
         }
     }

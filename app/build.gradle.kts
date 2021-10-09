@@ -18,4 +18,5 @@ dependencies {
     implementation(project(":base-android"))
     implementation(project(":app-base"))
     implementation(project(":app-theme"))
+    implementation(project(":app-ui"))
 }
