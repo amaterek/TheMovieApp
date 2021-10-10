@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":base"))
+    implementation(project(":domain"))
+
     api(Libs.AndroidX.hiltNavigationCompose)
     api(Libs.AndroidX.Compose.foundation)
     api(Libs.AndroidX.Compose.runtime)
@@ -10,4 +13,6 @@ dependencies {
     api(Libs.AndroidX.Compose.uiTooling)
     api(Libs.AndroidX.Lifecycle.composeViewModel)
     api(Libs.AndroidX.Navigation.compose)
+
+    testImplementation(project(":base-test"))
 }
