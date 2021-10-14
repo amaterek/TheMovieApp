@@ -30,6 +30,7 @@
 
     <string name="movie_list_search_content_description">Search</string>
     <string name="movie_list_favorite_description">Favorite star</string>
+    <string name="movie_list_search_hint">Type to search</string>
 
     <string name="movie_details_description">Overview</string>
     <string name="movie_details_budget">Budget: %1$.1f mln &#36;</string>
