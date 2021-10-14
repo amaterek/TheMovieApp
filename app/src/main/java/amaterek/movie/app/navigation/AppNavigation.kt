@@ -1,6 +1,6 @@
 package amaterek.movie.app.navigation
 
-import amaterek.base.log.Log
+import amaterek.movie.app.ui.movielist.MovieListScreen
 import amaterek.movie.app.ui.splash.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -17,7 +17,12 @@ fun AppNavigation() {
     ) {
         composable(route = SplashNavigation.route) {
             SplashScreen(
-                onSplashFinished = { Log.v("Navigation", "TODO handle onSplashFinished()") },
+                onSplashFinished = { SplashNavigation.navigateToMovieListScreen(navController) },
+            )
+        }
+        composable(route = MovieListNavigation.route) {
+            MovieListScreen(
+                onMovieClick = { }
             )
         }
     }

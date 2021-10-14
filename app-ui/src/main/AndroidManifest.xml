@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="amaterek.movie.app.ui" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="amaterek.movie.app.ui">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

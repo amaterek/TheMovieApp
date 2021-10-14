@@ -228,4 +228,15 @@ object Libs {
         const val turbine =
             "app.cash.turbine:turbine:${Versions.turbine}"
     }
+
+    object ThirdParty {
+        const val skydovesComoseCoil =
+            "com.github.skydoves:landscapist-coil:${Versions.skydovesComose}"
+
+        const val gowthamComposeRatingbar =
+            "com.github.a914-gowtham:compose-ratingbar:${Versions.gowthamComposeRatingbar}"
+
+        const val oneboneComposeToolbar =
+            "me.onebone:toolbar-compose:${Versions.oneboneComposeToolbar}"
+    }
 }

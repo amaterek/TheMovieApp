@@ -1,13 +1,24 @@
 package amaterek.movie.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
+@SuppressLint("ConflictingOnColor")
+@Stable
 internal val DarkColorPalette = darkColors(
-    background = Color.White,
+    background = AppColor.tmdbDarkBlue,
+    primary = AppColor.tmdbDarkBlue,
+    onPrimary = Color.LightGray,
+    surface = AppColor.tmdbDarkBlue,
 )
 
+@Stable
 internal val LightColorPalette = lightColors(
-    background = AppColor.tmdbDarkBlue,
+    background = Color.White,
+    primary = AppColor.tmdbDarkBlue,
+    onPrimary = Color.LightGray,
+    surface = Color.White,
 )

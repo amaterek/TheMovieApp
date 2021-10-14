@@ -19,4 +19,6 @@ dependencies {
     implementation(project(":app-base"))
     implementation(project(":app-theme"))
     implementation(project(":app-ui"))
+    implementation(project(":domain"))
+    implementation(project(":fake-movie-repository"))
 }

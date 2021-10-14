@@ -18,6 +18,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://jitpack.io") // temporary for com.github.a914-gowtham
     }
 }
 
