@@ -12,3 +12,7 @@ Browsers movies from https://www.themoviedb.org
 * Room 2.x,
 * Compose
 * JUnit/Mockk
+
+## TMDB API key
+If you want to use the application with www.themoviedb.org you need to put you API key in
+`local.properties` file as key `tmdb.api_key=xxxxxxxxxxx` otherwise the app will work on fake data.
