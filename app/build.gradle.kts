@@ -29,6 +29,7 @@ android {
 
         }
         getByName("release") {
+            isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug") // temporary solution
         }
     }
