@@ -21,7 +21,7 @@ object Log {
         Log.logger = logger
     }
 
-    fun setLevel(level: Log.Level) {
+    fun setLevel(level: Level) {
         Log.level = level
     }
 
