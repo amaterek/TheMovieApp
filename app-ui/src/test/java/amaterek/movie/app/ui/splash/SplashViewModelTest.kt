@@ -1,16 +1,14 @@
 package amaterek.movie.app.ui.splash
 
+import amaterek.base.test.*
 import amaterek.base.test.android.ViewModelTest
-import amaterek.base.test.coVerifyCalledOnes
-import amaterek.base.test.verify
-import amaterek.base.test.verifyComplete
-import amaterek.base.test.verifyItem
 import amaterek.movie.app.ui.splash.SplashViewModel.Event
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.runs
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 
@@ -33,9 +31,10 @@ class SplashViewModelTest : ViewModelTest() {
         runBlockingTest {
             coEvery { splashTask.execute(coroutineTestRule) } just runs
 
-            subject().eventFlow.verify {
+            val subject = subject()
+
+            subject.eventFlow.verify(this@runBlockingTest) {
                 verifyItem(Event.SplashFinished)
-                verifyComplete()
             }
 
             coVerifyCalledOnes { splashTask.execute(coroutineTestRule) }
@@ -48,9 +47,8 @@ class SplashViewModelTest : ViewModelTest() {
             coEvery { splashTask.requestFinish() } just runs
 
             subject().apply {
-                eventFlow.verify {
+                eventFlow.verify(this@runBlockingTest) {
                     verifyItem(Event.SplashFinished)
-                    verifyComplete()
                 }
 
                 requestFinish()

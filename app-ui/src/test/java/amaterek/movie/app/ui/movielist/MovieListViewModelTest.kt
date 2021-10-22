@@ -3,8 +3,6 @@ package amaterek.movie.app.ui.movielist
 import amaterek.base.test.android.ViewModelTest
 import amaterek.base.test.coVerifyCalledOnes
 import amaterek.base.test.verify
-import amaterek.base.test.verifyComplete
-import amaterek.base.test.verifyItem
 import amaterek.movie.base.LoadingState
 import amaterek.movie.base.moviesloader.MoviesLoader
 import amaterek.movie.base.moviesloader.MoviesState
@@ -16,6 +14,7 @@ import amaterek.movie.domain.usecase.ObserveFavoriteMoviesUseCase
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 
@@ -82,10 +81,9 @@ class MovieListViewModelTest : ViewModelTest() {
 
     @Test
     fun `WHEN requestLoadMore is called THEN calls MoviesLoader's loadMore`() {
-        // first moviesLoader.loadMore() is calle during creating an instance
-
         subject().requestLoadMore()
 
+        // first moviesLoader.loadMore() is called during creating an instance
         coVerify(exactly = 2) { moviesLoader.loadMore() }
     }
 
@@ -108,11 +106,10 @@ class MovieListViewModelTest : ViewModelTest() {
             ),
             cause = mockk()
         )
-        subject().moviesFlow.verify {
+        subject().moviesFlow.verify(this@runBlockingTest) {
             verifyItem(LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false)))
             verifyItem(loadingState1)
             verifyItem(loadingState2)
-            verifyComplete()
         }
 
         testMoviesStateFlow.emit(loadingState1)

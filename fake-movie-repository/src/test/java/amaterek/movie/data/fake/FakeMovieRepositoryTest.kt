@@ -10,6 +10,7 @@ import amaterek.movie.domain.model.MovieQuery.Type
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals

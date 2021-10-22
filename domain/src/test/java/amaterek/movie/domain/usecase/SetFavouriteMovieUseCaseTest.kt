@@ -6,6 +6,7 @@ import amaterek.movie.domain.model.Movie
 import amaterek.movie.domain.repository.MovieRepository
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 

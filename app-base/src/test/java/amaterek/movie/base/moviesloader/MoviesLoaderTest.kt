@@ -2,8 +2,6 @@ package amaterek.movie.base.moviesloader
 
 import amaterek.base.test.CoroutineTest
 import amaterek.base.test.verify
-import amaterek.base.test.verifyComplete
-import amaterek.base.test.verifyItem
 import amaterek.movie.base.LoadingState
 import amaterek.movie.domain.common.FailureCause
 import amaterek.movie.domain.common.QueryResult
@@ -13,6 +11,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 
@@ -54,7 +53,7 @@ class MoviesLoaderTest : CoroutineTest() {
             coEvery { getMoviesPageUseCase(movieQuery, page = 2) } returns
                     QueryResult.Success(moviesPage2)
 
-            subject.stateFlow.verify {
+            subject.stateFlow.verify(this) {
                 verifyItem(
                     LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
                 )
@@ -80,7 +79,6 @@ class MoviesLoaderTest : CoroutineTest() {
                         )
                     )
                 )
-                verifyComplete()
             }
 
 
@@ -102,7 +100,7 @@ class MoviesLoaderTest : CoroutineTest() {
             coEvery { getMoviesPageUseCase(movieQuery, page = 2) } returns
                     QueryResult.Failure(testFailureCase)
 
-            subject.stateFlow.verify {
+            subject.stateFlow.verify(this) {
                 verifyItem(
                     LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
                 )
@@ -120,7 +118,6 @@ class MoviesLoaderTest : CoroutineTest() {
                         MoviesState(movies = moviesPage1.items, hasMore = true), testFailureCase
                     )
                 )
-                verifyComplete()
             }
 
             subject.loadMore()
@@ -170,7 +167,7 @@ class MoviesLoaderTest : CoroutineTest() {
             coEvery { getMoviesPageUseCase(movieQuery, page = 1) } returns
                     QueryResult.Success(moviesPage1)
 
-            subject.stateFlow.verify {
+            subject.stateFlow.verify(this) {
                 verifyItem(
                     LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
                 )
@@ -192,7 +189,6 @@ class MoviesLoaderTest : CoroutineTest() {
                         )
                     )
                 )
-                verifyComplete()
             }
 
             subject.loadMore()
