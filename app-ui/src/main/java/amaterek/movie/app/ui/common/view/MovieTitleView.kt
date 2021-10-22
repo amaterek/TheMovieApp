@@ -1,6 +1,7 @@
 package amaterek.movie.app.ui.common.view
 
 import amaterek.movie.app.ui.R
+import amaterek.movie.base.date.dateOf
 import amaterek.movie.domain.model.Movie
 import amaterek.movie.domain.model.MovieRating
 import android.annotation.SuppressLint
@@ -45,7 +46,7 @@ internal fun MovieTitleViewPreview() {
             title = "Matrix",
             rating = MovieRating(0),
             genres = emptyList(),
-            releaseDate = Date(2011 - 1900, 7 - 1, 21),
+            releaseDate =  dateOf(2011, 7, 21),
             posterUrl = "",
             backdropUrl = "",
             isFavorite = true,
