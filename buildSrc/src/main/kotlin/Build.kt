@@ -6,10 +6,10 @@ object Build {
 
     val commonCompileArgs = listOf(
 //        "-Werror",
-        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
-        "-Xuse-experimental=kotlin.time.ExperimentalTime",
-        "-Xuse-experimental=androidx.compose.foundation.ExperimentalFoundationApi",
+        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "-Xopt-in=kotlinx.coroutines.FlowPreview",
+        "-Xopt-in=kotlin.time.ExperimentalTime",
+        "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
         "-Xallow-unstable-dependencies",
     )
 }
