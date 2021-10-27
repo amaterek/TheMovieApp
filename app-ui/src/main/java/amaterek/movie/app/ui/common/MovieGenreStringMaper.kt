@@ -15,13 +15,18 @@ fun getMovieGenreStringId(genre: MovieGenre) = when (genre) {
     MovieGenre.FANTASY -> R.string.movie_genre_fantasy
     MovieGenre.HISTORY -> R.string.movie_genre_history
     MovieGenre.HORROR -> R.string.movie_genre_horror
+    MovieGenre.KIDS -> R.string.movie_genre_kids
     MovieGenre.MUSIC -> R.string.movie_genre_music
     MovieGenre.MYSTERY -> R.string.movie_genre_mystery
+    MovieGenre.NEWS -> R.string.movie_genre_news
+    MovieGenre.POLITICS -> R.string.movie_genre_politics
+    MovieGenre.REALITY -> R.string.movie_genre_reality
     MovieGenre.ROMANCE -> R.string.movie_genre_romance
     MovieGenre.SCIENCE_FICTION -> R.string.movie_genre_science_fiction
-    MovieGenre.TV_MOVIE -> R.string.movie_genre_tv_movie
+    MovieGenre.SOAP -> R.string.movie_genre_soap
+    MovieGenre.TALK -> R.string.movie_genre_talk
     MovieGenre.THRILLER -> R.string.movie_genre_thriller
+    MovieGenre.TV_MOVIE -> R.string.movie_genre_tv_movie
     MovieGenre.WAR -> R.string.movie_genre_war
     MovieGenre.WESTERN -> R.string.movie_genre_western
-    MovieGenre.KIDS -> R.string.movie_genre_kids
 }

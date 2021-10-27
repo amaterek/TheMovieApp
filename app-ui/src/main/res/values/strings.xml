@@ -14,15 +14,20 @@
     <string name="movie_genre_fantasy">Fantasy</string>
     <string name="movie_genre_history">History</string>
     <string name="movie_genre_horror">Horror</string>
+    <string name="movie_genre_kids">Kids</string>
     <string name="movie_genre_music">Music</string>
     <string name="movie_genre_mystery">Mystery</string>
+    <string name="movie_genre_news">News</string>
+    <string name="movie_genre_politics">Politics</string>
+    <string name="movie_genre_reality">Reality</string>
     <string name="movie_genre_romance">Romance</string>
     <string name="movie_genre_science_fiction">Sci-Fi</string>
-    <string name="movie_genre_tv_movie">Tv Movie</string>
+    <string name="movie_genre_soap">Soap</string>
+    <string name="movie_genre_talk">Talk</string>
     <string name="movie_genre_thriller">Thriller</string>
+    <string name="movie_genre_tv_movie">Tv Movie</string>
     <string name="movie_genre_war">War</string>
     <string name="movie_genre_western">Western</string>
-    <string name="movie_genre_kids">Kids</string>
 
     <string name="load_more_movies_button">Tap here to load more</string>
 
