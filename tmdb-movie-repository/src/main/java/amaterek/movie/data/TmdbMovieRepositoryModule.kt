@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
 
+private const val MOVIES_DB = "movies.db"
+
 @Module
 @InstallIn(SingletonComponent::class)
 internal class MovieDatabaseModule {
@@ -19,7 +21,7 @@ internal class MovieDatabaseModule {
     @Provides
     @Singleton
     fun provideMovieDatabase(@ApplicationContext context: Context): MoviesDatabase =
-        Room.databaseBuilder(context, MoviesDatabase::class.java, "movies.db").build()
+        Room.databaseBuilder(context, MoviesDatabase::class.java, MOVIES_DB).build()
 
     @Provides
     @Named("TMDB")

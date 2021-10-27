@@ -5,8 +5,8 @@ import amaterek.base.log.Log
 import amaterek.base.logTag
 import amaterek.movie.data.tmdb.TmdbApiService
 import amaterek.movie.data.tmdb.TmdbConfig
-import amaterek.movie.data.tmdb.toDomain
-import amaterek.movie.data.tmdb.toTmdb
+import amaterek.movie.data.tmdb.mapper.toDomain
+import amaterek.movie.data.tmdb.mapper.toTmdb
 import amaterek.movie.domain.common.FailureCause
 import amaterek.movie.domain.common.QueryResult
 import amaterek.movie.domain.model.MovieCategory
@@ -16,18 +16,16 @@ import amaterek.movie.domain.model.MovieQuery
 import amaterek.movie.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class TmdbMovieRepository @Inject constructor(
     private val service: TmdbApiService,
     private val config: TmdbConfig,
     private val localeProvider: LocaleProvider,
-    private val _favoriteMoviesIds: FavoriteMoviesStateFlow,
+    private val favoriteMoviesIdsState: FavoriteMoviesState,
 ) : MovieRepository {
 
     override val favoriteMoviesIds: StateFlow<Set<Long>>
-        get() = _favoriteMoviesIds
+        get() = favoriteMoviesIdsState.asStateFlow()
 
     override suspend fun getMovieListPage(query: MovieQuery, page: Int): QueryResult<MovieList> =
         when (val queryType = query.type) {
@@ -51,7 +49,7 @@ internal class TmdbMovieRepository @Inject constructor(
             ).toDomain(
                 config.basePosterImageUrl,
                 config.baseBackdropImageUrl,
-                _favoriteMoviesIds.getIds()
+                favoriteMoviesIdsState.getIds()
             )
         )
     } catch (e: Exception) {
@@ -64,23 +62,28 @@ internal class TmdbMovieRepository @Inject constructor(
         page: Int
     ) = try {
         val trimmedPhrase = phrase.trim()
-        if (trimmedPhrase.isEmpty()) MovieList(
-            items = emptyList(),
-            loadedPages = 1,
-            totalPages = 1,
-        )
-        QueryResult.Success(
-            service.searchMovie(
-                phrase = trimmedPhrase,
-                apiKey = config.apiKey,
-                language = localeProvider.getLocale().toTmdb(),
-                page = page,
-            ).toDomain(
-                config.basePosterImageUrl,
-                config.baseBackdropImageUrl,
-                _favoriteMoviesIds.getIds()
+        if (trimmedPhrase.isEmpty()) {
+            QueryResult.Success(
+                MovieList(
+                    items = emptyList(),
+                    loadedPages = 1,
+                    totalPages = 1,
+                )
             )
-        )
+        } else {
+            QueryResult.Success(
+                service.searchMovie(
+                    phrase = trimmedPhrase,
+                    apiKey = config.apiKey,
+                    language = localeProvider.getLocale().toTmdb(),
+                    page = page,
+                ).toDomain(
+                    config.basePosterImageUrl,
+                    config.baseBackdropImageUrl,
+                    favoriteMoviesIdsState.getIds()
+                )
+            )
+        }
     } catch (e: Exception) {
         Log.w(logTag(), throwable = e)
         QueryResult.Failure(cause = FailureCause.Error)
@@ -103,11 +106,11 @@ internal class TmdbMovieRepository @Inject constructor(
 
     override suspend fun setFavorite(movieId: Long, favorite: Boolean) {
         when (favorite) {
-            true -> _favoriteMoviesIds.addId(movieId)
-            false -> _favoriteMoviesIds.removeId(movieId)
+            true -> favoriteMoviesIdsState.addId(movieId)
+            false -> favoriteMoviesIdsState.removeId(movieId)
         }
     }
 
     private suspend fun isFavorite(movieId: Long) =
-        _favoriteMoviesIds.getIds().contains(movieId)
+        favoriteMoviesIdsState.getIds().contains(movieId)
 }

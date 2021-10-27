@@ -21,4 +21,6 @@ dependencies {
 
     kapt(Libs.AndroidX.Room.kapt)
     kapt(Libs.Moshi.kapt)
+
+    testImplementation(project(":base-test"))
 }
