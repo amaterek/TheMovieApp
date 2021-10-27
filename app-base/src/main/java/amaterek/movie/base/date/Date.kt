@@ -14,8 +14,9 @@ fun dateOf(
     calendar[Calendar.YEAR] = year
     calendar[Calendar.MONTH] = month - 1
     calendar[Calendar.DAY_OF_MONTH] = day
-    calendar[Calendar.MINUTE] = hour
+    calendar[Calendar.HOUR_OF_DAY] = hour
     calendar[Calendar.MINUTE] = minute
     calendar[Calendar.SECOND] = second
+    calendar[Calendar.MILLISECOND] = 0
     return calendar.time
 }
