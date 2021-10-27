@@ -9,8 +9,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class TmdbMovieRepositoryQualifier
 
 private const val MOVIES_DB = "movies.db"
 
@@ -24,6 +28,8 @@ internal class MovieDatabaseModule {
         Room.databaseBuilder(context, MoviesDatabase::class.java, MOVIES_DB).build()
 
     @Provides
-    @Named("TMDB")
-    fun provideMovieRepository(tmdbMovieRepository: TmdbMovieRepository): MovieRepository = tmdbMovieRepository
+    @Singleton
+    @TmdbMovieRepositoryQualifier
+    fun provideMovieRepository(tmdbMovieRepository: TmdbMovieRepository): MovieRepository =
+        tmdbMovieRepository
 }
