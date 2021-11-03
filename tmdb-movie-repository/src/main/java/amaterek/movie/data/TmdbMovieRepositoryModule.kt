@@ -1,6 +1,7 @@
 package amaterek.movie.data
 
 import amaterek.movie.data.local.MoviesDatabase
+import amaterek.movie.data.tmdb.TmdbConfig
 import amaterek.movie.domain.repository.MovieRepository
 import android.content.Context
 import androidx.room.Room
@@ -21,6 +22,16 @@ private const val MOVIES_DB = "movies.db"
 @Module
 @InstallIn(SingletonComponent::class)
 internal class MovieDatabaseModule {
+
+    @Provides
+    @Singleton
+    fun provideTmdbTmdbConfig(@ApplicationContext context: Context): TmdbConfig =
+        TmdbConfig(
+            baseUrl = BuildConfig.TMDB_BASE_URL,
+            basePosterImageUrl = "${BuildConfig.TMDB_BASE_IMAGE_URL}${context.getString(R.string.tmdb_poster_image_size)}/",
+            baseBackdropImageUrl = "${BuildConfig.TMDB_BASE_IMAGE_URL}${context.getString(R.string.tmdb_backdrop_image_size)}/",
+            apiKey = BuildConfig.TMDB_API_KEY,
+        )
 
     @Provides
     @Singleton
