@@ -3,46 +3,30 @@ package amaterek.movie.app.navigation
 import amaterek.movie.app.ui.moviedetails.MovieDetailsScreen
 import amaterek.movie.app.ui.movielist.MovieListScreen
 import amaterek.movie.app.ui.splash.SplashScreen
+import amaterek.movie.base.navigation.Navigation
+import amaterek.movie.base.navigation.destination
+import amaterek.movie.base.navigation.navigateTo
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-
-private object Arguments {
-    const val movieId = "movieId"
-}
 
 @Composable
 fun AppNavigation() {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = SplashNavigation.route
-    ) {
-        composable(route = SplashNavigation.route) {
+    Navigation(startDestination = SplashDestination) {
+        destination(SplashDestination) {
             SplashScreen(
-                onSplashFinished = { SplashNavigation.navigateToMovieListScreen(navController) },
+                onSplashFinished = { navigateTo(SplashDestination.movieListDirection) },
             )
         }
-        composable(route = MovieListNavigation.route) {
+        destination(MovieListDestination) {
             MovieListScreen(
-                onMovieClick = {
-                    MovieListNavigation.navigateToMovieListScreen(
-                        navController,
-                        it.id
-                    )
+                onMovieClick = { movie ->
+                    navigateTo(MovieListDestination.movieDetailsDirection(movie))
                 }
             )
         }
-        composable(
-            route = "${MovieDetailsNavigation.route}/{${Arguments.movieId}}",
-            arguments =  listOf(navArgument(Arguments.movieId) { type = NavType.LongType })
-        ) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getLong(Arguments.movieId)
-            MovieDetailsScreen(movieId!!) // TODO handle error if null
+        destination(MovieDetailsDestination) {
+            val movieId = MovieDetailsDestination.getMovieId(this)
+                ?: throw IllegalArgumentException()
+            MovieDetailsScreen(movieId)
         }
     }
 }
