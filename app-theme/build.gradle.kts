@@ -1,5 +1,5 @@
 plugins {
-    id("common.android-library")
+    id("common.android-library-no-hilt")
 }
 
 dependencies {

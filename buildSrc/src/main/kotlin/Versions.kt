@@ -4,16 +4,16 @@ object Versions {
 
     object AndroidX {
         // https://developer.android.com/jetpack/androidx/versions
-        const val activity = "1.3.1"
-        const val appcompat = "1.3.1"
-        const val compose = "1.1.0-alpha05"
-        const val coreKtx = "1.6.0"
-        const val fragment = "1.3.6"
+        const val activity = "1.4.0"
+        const val appcompat = "1.4.0-rc01"
+        const val compose = "1.1.0-beta02"
+        const val coreKtx = "1.7.0"
+        const val fragment = "1.4.0-rc01"
         const val hilt = "1.0.0" // https://developer.android.com/jetpack/androidx/releases/hilt
         const val hiltCompose = "1.0.0-alpha03" // https://developer.android.com/jetpack/androidx/releases/hilt
-        const val navigation = "2.4.0-alpha10"
-        const val room = "2.3.0"
-        const val lifecycle = "2.4.0-rc01"
+        const val navigation = "2.4.0-beta02"
+        const val room = "2.4.0-beta01"
+        const val lifecycle = "2.4.0"
 
         // https://developer.android.com/jetpack/androidx/releases/recyclerview
         const val recyclerView = "1.2.1"
@@ -36,7 +36,7 @@ object Versions {
     const val coroutines = "1.5.1"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.5.0-alpha03"
+    const val material = "1.5.0-alpha05"
 
     // https://square.github.io/okhttp/#releases
     const val okHttp3 = "4.9.0"
@@ -54,7 +54,7 @@ object Versions {
     const val coil = "1.4.0"
 
     // https://github.com/google/dagger/releases
-    const val hilt = "2.38.1"
+    const val hilt = "2.40"
 
     // https://junit.org/junit4/dependency-info.html
     const val junit4 = "4.13.2"

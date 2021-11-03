@@ -11,5 +11,7 @@ object Build {
         "-Xopt-in=kotlin.time.ExperimentalTime",
         "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
         "-Xallow-unstable-dependencies",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true" // TODO remove!!!
     )
 }
