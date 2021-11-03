@@ -65,9 +65,6 @@ object Versions {
     // https://github.com/cashapp/turbine
     const val turbine = "0.6.1"
 
-    // https://github.com/skydoves/Landscapist
-    const val skydovesComose = "1.3.7"
-
     // https://github.com/onebone/compose-collapsing-toolbar
     const val gowthamComposeRatingbar = "1.1.1"
 

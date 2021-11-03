@@ -1,9 +1,10 @@
 package amaterek.movie.app.ui.common.view
 
+import amaterek.base.log.Log
 import amaterek.movie.app.ui.common.defaultPadding
-import amaterek.movie.app.ui.common.shimmerParams
 import amaterek.movie.domain.model.Movie
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.skydoves.landscapist.coil.CoilImage
+import coil.compose.rememberImagePainter
 
 @Composable
 internal fun MoviePosterView(
@@ -21,6 +22,10 @@ internal fun MoviePosterView(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val posterImagePainter = rememberImagePainter(movie.posterUrl) {
+        crossfade(true)
+    }
+
     Column(
         modifier = modifier
     ) {
@@ -33,14 +38,14 @@ internal fun MoviePosterView(
             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface),
             elevation = 0.dp,
         ) {
-            CoilImage(
-                imageModel = movie.posterUrl,
+            Log.v("ComposeRender", "PosterImage")
+            Image(
+                painter = posterImagePainter,
                 contentDescription = movie.title,
                 modifier = Modifier
                     .fillMaxSize()
                     .aspectRatio(300f / 450f),
                 contentScale = ContentScale.Crop,
-                shimmerParams = shimmerParams(),
             )
         }
     }

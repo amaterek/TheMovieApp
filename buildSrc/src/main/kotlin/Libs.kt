@@ -230,8 +230,6 @@ object Libs {
     }
 
     object ThirdParty {
-        const val skydovesComoseCoil =
-            "com.github.skydoves:landscapist-coil:${Versions.skydovesComose}"
 
         const val gowthamComposeRatingbar =
             "com.github.a914-gowtham:compose-ratingbar:${Versions.gowthamComposeRatingbar}"

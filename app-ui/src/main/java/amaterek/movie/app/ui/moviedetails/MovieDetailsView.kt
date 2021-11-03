@@ -3,7 +3,6 @@ package amaterek.movie.app.ui.moviedetails
 import amaterek.base.log.Log
 import amaterek.movie.app.ui.R
 import amaterek.movie.app.ui.common.defaultPadding
-import amaterek.movie.app.ui.common.shimmerParams
 import amaterek.movie.app.ui.common.view.*
 import amaterek.movie.domain.model.MovieDetails
 import android.annotation.SuppressLint
@@ -14,8 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.skydoves.landscapist.coil.CoilImage
+import coil.compose.rememberImagePainter
 import java.text.SimpleDateFormat
 
 @SuppressLint("SimpleDateFormat")
@@ -38,24 +35,23 @@ internal fun MovieDetailsView(
 ) {
     Log.v("ComposeRender", "MovieDetailsView")
 
-    val backdropImageHeightState = remember { mutableStateOf(240.dp) }
+    val backDropImagePainter = rememberImagePainter(movieDetails.movie.backdropUrl) {
+        crossfade(true)
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         item {
             Box {
-                CoilImage(
-                    imageModel = movieDetails.movie.backdropUrl,
+                Image(
+                    painter = backDropImagePainter,
                     contentDescription = movieDetails.movie.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(backdropImageHeightState.value),
+                        .height(240.dp),
                     contentScale = ContentScale.Crop,
-                    shimmerParams = shimmerParams(),
-                    failure = {
-                        backdropImageHeightState.value = 0.dp
-                    }
                 )
                 ToggleFavoriteButton(
                     isFavorite = movieDetails.movie.isFavorite,

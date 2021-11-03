@@ -7,7 +7,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":app-base"))
     implementation(project(":app-theme"))
-    implementation(Libs.ThirdParty.skydovesComoseCoil)
+    implementation(Libs.Coil.compose)
     implementation(Libs.ThirdParty.gowthamComposeRatingbar)
     implementation(Libs.ThirdParty.oneboneComposeToolbar)
 
