@@ -34,11 +34,13 @@ private val movieDateFormat =
 @Composable
 internal fun MovieItemView(
     movie: Movie,
-    onMovieClick: (Movie) -> Unit
+    modifier: Modifier = Modifier,
+    onMovieClick: (Movie) -> Unit,
 ) {
     Log.v("ComposeRender", "MovieItemView")
 
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
@@ -47,6 +49,7 @@ internal fun MovieItemView(
             MoviePosterView(
                 movie = movie,
                 onClick = { onMovieClick(movie) },
+                modifier = Modifier.padding(defaultPadding)
             )
             MovieRatingBar(
                 movieRating = movie.rating,

@@ -1,6 +1,5 @@
 package amaterek.movie.app.ui.searchmovies
 
-import amaterek.movie.app.ui.R
 import amaterek.movie.app.ui.common.defaultPadding
 import amaterek.movie.domain.model.Movie
 import androidx.compose.foundation.BorderStroke
@@ -12,7 +11,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,9 +39,9 @@ internal fun SearchMovieDialog(
             ) {
                 SearchMoviesView(
                     moviesSearchState = moviesSearchState.value,
+                    modifier = Modifier.fillMaxSize(),
                     onMovieClick = onMovieClick,
                     onSearchPhraseChange = { viewModel.searchMovieByPhrase(it) },
-                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

@@ -229,6 +229,12 @@ object Libs {
             "app.cash.turbine:turbine:${Versions.turbine}"
     }
 
+    object GoogleAccompanist {
+
+        const val swipeRefresh =
+            "com.google.accompanist:accompanist-swiperefresh:${Versions.googleAccompanist}"
+    }
+
     object ThirdParty {
 
         const val gowthamComposeRatingbar =

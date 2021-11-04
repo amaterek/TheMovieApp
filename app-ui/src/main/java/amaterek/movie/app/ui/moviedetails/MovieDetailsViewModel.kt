@@ -38,9 +38,9 @@ internal class MovieDetailsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun setMovieId(movieId: Long) {
+    fun setMovieId(movieId: Long, reload: Boolean) {
         Log.v(logTag(), "setMovieId(): setMovieId=$movieId")
-        if (movieFlow.value.value?.movie?.id == movieId) return
+        if (!reload && (movieFlow.value.value?.movie?.id == movieId)) return
         _movieFlow.value = LoadingState.Loading(movieFlow.value.value)
         viewModelScope.launch {
             when (val result = getMovieDetailsUseCase(movieId)) {

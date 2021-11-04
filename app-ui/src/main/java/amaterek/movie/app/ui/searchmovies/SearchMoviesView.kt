@@ -29,9 +29,9 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun SearchMoviesView(
     moviesSearchState: MovieSearchState,
+    modifier: Modifier = Modifier,
     onSearchPhraseChange: (String) -> Unit,
     onMovieClick: (Movie) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Log.v("ComposeRender", "SearchMoviesView")
 
