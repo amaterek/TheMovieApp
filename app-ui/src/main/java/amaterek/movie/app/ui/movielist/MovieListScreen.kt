@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,6 +29,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 fun MovieListScreen(
     onMovieClick: (Movie) -> Unit,
+    onLoginClicked: () -> Unit = {}
 ) {
 
     val viewModel = hiltViewModel<MovieListViewModel>()
@@ -64,7 +66,14 @@ fun MovieListScreen(
                                     contentDescription = stringResource(R.string.movie_list_search_content_description),
                                 )
                             }
-                        },
+                        IconButton(
+                            onClick = onLoginClicked
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Login,
+                                contentDescription = null,
+                            )
+                        }},
                     )
                 }
             ) {

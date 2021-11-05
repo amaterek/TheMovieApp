@@ -12,4 +12,8 @@ object MovieListDestination : Destination(baseRoute = "movie/list") {
         destination = MovieDetailsDestination,
         argument = movie.id.toString(),
     )
+
+    fun navigateToLoginScreen() = Direction(
+        destination = LoginDestination,
+    )
 }

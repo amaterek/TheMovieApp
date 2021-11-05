@@ -1,5 +1,6 @@
 package amaterek.movie.app.navigation
 
+import amaterek.movie.app.ui.login.LoginScreen
 import amaterek.movie.app.ui.moviedetails.MovieDetailsScreen
 import amaterek.movie.app.ui.movielist.MovieListScreen
 import amaterek.movie.app.ui.splash.SplashScreen
@@ -16,11 +17,19 @@ fun AppNavigation() {
                 onSplashFinished = { navigateTo(SplashDestination.movieListDirection) },
             )
         }
+        destination(LoginDestination) {
+            LoginScreen(
+                onUserLoggedIn = { navController.popBackStack() },
+            )
+        }
         destination(MovieListDestination) {
             MovieListScreen(
                 onMovieClick = { movie ->
                     navigateTo(MovieListDestination.movieDetailsDirection(movie))
-                }
+                },
+                onLoginClicked = {
+                    navigateTo(MovieListDestination.navigateToLoginScreen())
+                },
             )
         }
         destination(MovieDetailsDestination) {

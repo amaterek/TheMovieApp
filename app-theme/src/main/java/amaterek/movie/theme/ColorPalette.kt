@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 @Stable
 internal val DarkColorPalette = darkColors(
     background = AppColor.tmdbDarkBlue,
+    onBackground = Color.LightGray,
     primary = AppColor.tmdbDarkBlue,
     onPrimary = Color.LightGray,
     surface = AppColor.tmdbDarkBlue,
@@ -20,6 +21,7 @@ internal val DarkColorPalette = darkColors(
 @Stable
 internal val LightColorPalette = lightColors(
     background = Color.White,
+    onBackground = AppColor.tmdbDarkBlue,
     primary = AppColor.tmdbDarkBlue,
     onPrimary = Color.LightGray,
     surface = Color.White,
