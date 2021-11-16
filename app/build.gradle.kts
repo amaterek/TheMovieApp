@@ -19,7 +19,7 @@ dependencies {
     implementation(project(":base-android"))
     implementation(project(":app-base"))
     implementation(project(":app-theme"))
-    implementation(project(":app-ui"))
+    implementation(project(":app-movie-ui"))
     implementation(project(":domain"))
     implementation(project(":tmdb-movie-repository"))
     implementation(project(":fake-movie-repository"))
