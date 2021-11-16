@@ -3,8 +3,8 @@ package amaterek.movie.app.ui.moviedetails
 import amaterek.base.log.Log
 import amaterek.movie.app.ui.R
 import amaterek.movie.app.ui.common.defaultPadding
+import amaterek.movie.app.ui.common.model.UiMovieDetails
 import amaterek.movie.app.ui.common.view.*
-import amaterek.movie.domain.model.MovieDetails
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -29,7 +29,7 @@ private val movieDetailsDateFormat =
 
 @Composable
 internal fun MovieDetailsView(
-    movieDetails: MovieDetails,
+    movieDetails: UiMovieDetails,
     modifier: Modifier = Modifier,
     onSetFavoriteClick: () -> Unit,
 ) {

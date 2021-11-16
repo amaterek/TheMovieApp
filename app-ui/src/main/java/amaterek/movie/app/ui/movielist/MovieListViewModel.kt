@@ -1,9 +1,11 @@
 package amaterek.movie.app.ui.movielist
 
 import amaterek.base.android.viewmodel.BaseViewModel
+import amaterek.movie.app.ui.common.model.toUiModel
 import amaterek.movie.base.LoadingState
 import amaterek.movie.base.moviesloader.MoviesLoader
-import amaterek.movie.base.moviesloader.MoviesState
+import amaterek.movie.base.moviesloader.MoviesLoaderState
+import amaterek.movie.base.transformValue
 import amaterek.movie.domain.model.MovieCategory
 import amaterek.movie.domain.model.MovieQuery
 import amaterek.movie.domain.model.MovieQuery.SortBy
@@ -25,15 +27,13 @@ internal class MovieListViewModel @Inject constructor(
     observeFavoriteMoviesUseCase: ObserveFavoriteMoviesUseCase,
 ) : BaseViewModel() {
 
-    private val _moviesFlow = MutableStateFlow<LoadingState<MoviesState>>(
-        LoadingState.Idle(
-            MoviesState(
-                movies = emptyList(),
-                hasMore = false
-            )
+    private val _stateFlow = MutableStateFlow(
+        MovieListState(
+            movies = emptyList(),
+            loadingState = LoadingState.Idle(Unit)
         )
     )
-    val moviesFlow = _moviesFlow.asStateFlow()
+    val stateFlow = _stateFlow.asStateFlow()
 
     private var query = MovieQuery(
         type = Type.ByCategory(MovieCategory.NOW_PLAYING),
@@ -53,15 +53,18 @@ internal class MovieListViewModel @Inject constructor(
     private fun initMoviesLoader() {
         moviesLoader = MoviesLoader.create(query, getMoviesPageUseCase)
         moviesLoader.stateFlow
-            .onEach(::handleMoviesState)
+            .onEach(::handleMoviesLoaderState)
             .launchIn(viewModelScope)
         viewModelScope.launch {
             moviesLoader.loadMore()
         }
     }
 
-    private fun handleMoviesState(state: LoadingState<MoviesState>) {
-        _moviesFlow.value = state
+    private fun handleMoviesLoaderState(movieLoaderState: LoadingState<MoviesLoaderState>) {
+        _stateFlow.value = MovieListState(
+            movies = movieLoaderState.value.movies.toUiModel(),
+            loadingState = movieLoaderState.transformValue { }
+        )
     }
 
     fun requestLoadMore() {

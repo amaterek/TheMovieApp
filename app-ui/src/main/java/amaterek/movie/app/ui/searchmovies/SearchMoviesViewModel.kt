@@ -3,9 +3,11 @@ package amaterek.movie.app.ui.searchmovies
 import amaterek.base.android.viewmodel.BaseViewModel
 import amaterek.base.log.Log
 import amaterek.base.logTag
-import amaterek.movie.base.LoadingState
+import amaterek.movie.app.ui.common.model.toUiModel
 import amaterek.movie.base.moviesloader.MoviesLoader
-import amaterek.movie.base.moviesloader.MoviesState
+import amaterek.movie.base.moviesloader.MoviesLoaderState
+import amaterek.movie.base.LoadingState
+import amaterek.movie.base.transformValue
 import amaterek.movie.domain.model.MovieQuery
 import amaterek.movie.domain.usecase.GetMoviesPageUseCase
 import androidx.lifecycle.viewModelScope
@@ -20,49 +22,30 @@ internal class SearchMoviesViewModel @Inject constructor(
     private val getMoviesPageUseCase: GetMoviesPageUseCase
 ) : BaseViewModel() {
 
-    private val debounceTimeMillis = 400L
+    private val _stateFlow = MutableStateFlow(EmptyMovieSearchState)
+    val stateFlow = _stateFlow.asStateFlow()
 
-    private val emptyMoviesState = MovieSearchState(
-        phrase = "",
-        moviesState = LoadingState.Idle(
-            MoviesState(
-                movies = emptyList(),
-                hasMore = false,
-            )
-        ),
-    )
-
-    private val _moviesFlow = MutableStateFlow(emptyMoviesState)
-    val moviesFlow = _moviesFlow.asStateFlow()
-
-    private val phraseFlow = MutableStateFlow("")
+    private val internalPhraseFlow = MutableStateFlow("")
 
     private var searchMoviesJob: Job? = null
 
     init {
-        phraseFlow
-            .debounce(debounceTimeMillis)
+        internalPhraseFlow
+            .debounce(DebounceTimeMillis)
             .onEach(::handlePhraseChanged)
             .launchIn(viewModelScope)
     }
 
     fun searchMovieByPhrase(phrase: String) {
-        _moviesFlow.value = MovieSearchState(
-            phrase = phrase,
-            moviesState = moviesFlow.value.moviesState
-        )
-        phraseFlow.value = phrase
+        _stateFlow.value = _stateFlow.value.copy(phrase = phrase)
+        internalPhraseFlow.value = phrase
     }
 
     private fun handlePhraseChanged(phrase: String) {
         if (phrase.isBlank()) {
-            _moviesFlow.value = emptyMoviesState
+            _stateFlow.value = EmptyMovieSearchState
         } else {
             searchMovies(createQueryForPhrase(phrase))
-            _moviesFlow.value = MovieSearchState(
-                phrase = phrase,
-                moviesState = LoadingState.Loading(moviesFlow.value.moviesState.value)
-            )
         }
     }
 
@@ -81,20 +64,27 @@ internal class SearchMoviesViewModel @Inject constructor(
             with(MoviesLoader.create(query, getMoviesPageUseCase)) {
                 loadMore()
                 stateFlow.collect {
-                    handleMoviesState(
-                        state = it,
-                        phrase = (query.type as MovieQuery.Type.ByPhrase).phrase
-                    )
+                    handleMoviesLoaderState(state = it)
                 }
             }
         }
     }
 
-    private fun handleMoviesState(state: LoadingState<MoviesState>, phrase: String) {
-        Log.v(logTag(), "handleMoviesState: set value=${state.value}")
-        _moviesFlow.value = MovieSearchState(
-            phrase = phrase,
-            moviesState = state
+    private fun handleMoviesLoaderState(state: LoadingState<MoviesLoaderState>) {
+        Log.v(logTag(), "handleMoviesLoaderState: set value=${state.value}")
+        _stateFlow.value = _stateFlow.value.copy(
+            movies = state.value.movies.toUiModel(),
+            loadingState = state.transformValue { }
+        )
+    }
+
+    companion object {
+        private const val DebounceTimeMillis = 400L
+
+        private val EmptyMovieSearchState = SearchMoviesState(
+            phrase = "",
+            movies = emptyList(),
+            loadingState = LoadingState.Idle(Unit),
         )
     }
 }

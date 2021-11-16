@@ -1,7 +1,7 @@
 package amaterek.movie.app.ui.searchmovies
 
 import amaterek.movie.app.ui.common.defaultPadding
-import amaterek.movie.domain.model.Movie
+import amaterek.movie.app.ui.common.model.UiMovie
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,15 +16,15 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-internal fun SearchMovieDialog(
-    onMovieClick: (Movie) -> Unit,
+internal fun SearchMoviesDialog(
+    onMovieClick: (UiMovie) -> Unit,
     showDialog: Boolean,
     onDismissRequest: () -> Unit,
 ) {
     if (showDialog) {
         val viewModel = hiltViewModel<SearchMoviesViewModel>()
 
-        val moviesSearchState = viewModel.moviesFlow.collectAsState()
+        val moviesSearchState = viewModel.stateFlow.collectAsState()
 
         Dialog(
             onDismissRequest = onDismissRequest,

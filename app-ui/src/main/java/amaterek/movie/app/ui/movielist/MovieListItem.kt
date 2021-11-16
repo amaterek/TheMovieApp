@@ -3,13 +3,13 @@ package amaterek.movie.app.ui.movielist
 import amaterek.base.log.Log
 import amaterek.movie.app.ui.R
 import amaterek.movie.app.ui.common.defaultPadding
+import amaterek.movie.app.ui.common.model.UiMovie
 import amaterek.movie.app.ui.common.ratingBarPadding
 import amaterek.movie.app.ui.common.ratingBarSize
 import amaterek.movie.app.ui.common.view.MovieGenresView
 import amaterek.movie.app.ui.common.view.MoviePosterView
 import amaterek.movie.app.ui.common.view.MovieRatingBar
 import amaterek.movie.app.ui.common.view.MovieTitleView
-import amaterek.movie.domain.model.Movie
 import amaterek.movie.domain.model.MovieGenre
 import amaterek.movie.domain.model.MovieRating
 import android.annotation.SuppressLint
@@ -33,11 +33,11 @@ private val movieDateFormat =
 
 @Composable
 internal fun MovieItemView(
-    movie: Movie,
+    movie: UiMovie,
     modifier: Modifier = Modifier,
-    onMovieClick: (Movie) -> Unit,
+    onMovieClick: (UiMovie) -> Unit,
 ) {
-    Log.v("ComposeRender", "MovieItemView")
+    Log.v("ComposeRender", "MovieItemView: ${movie.id}")
 
     Column(
         modifier = modifier,
@@ -89,7 +89,7 @@ internal fun MovieItemView(
 @Composable
 fun MovieItemViewPreview() {
     MovieItemView(
-        movie = Movie(
+        movie = UiMovie(
             id = 1,
             title = "Matrix",
             rating = MovieRating(90),

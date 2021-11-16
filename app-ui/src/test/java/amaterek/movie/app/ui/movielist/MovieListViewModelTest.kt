@@ -3,9 +3,11 @@ package amaterek.movie.app.ui.movielist
 import amaterek.base.test.android.ViewModelTest
 import amaterek.base.test.coVerifyCalledOnes
 import amaterek.base.test.verify
+import amaterek.movie.app.ui.common.model.UiMovie
+import amaterek.movie.app.ui.common.model.toUiModel
 import amaterek.movie.base.LoadingState
 import amaterek.movie.base.moviesloader.MoviesLoader
-import amaterek.movie.base.moviesloader.MoviesState
+import amaterek.movie.base.moviesloader.MoviesLoaderState
 import amaterek.movie.domain.model.Movie
 import amaterek.movie.domain.model.MovieCategory
 import amaterek.movie.domain.model.MovieQuery
@@ -15,6 +17,7 @@ import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -31,7 +34,7 @@ class MovieListViewModelTest : ViewModelTest() {
 
     private lateinit var testFavoriteMoviesIds: MutableStateFlow<Set<Long>>
 
-    private lateinit var testMoviesStateFlow: MutableStateFlow<LoadingState<MoviesState>>
+    private lateinit var testMoviesLoadingStateFlow: MutableStateFlow<LoadingState<MoviesLoaderState>>
 
     @Before
     fun setUp() {
@@ -43,9 +46,13 @@ class MovieListViewModelTest : ViewModelTest() {
         mockkObject(MoviesLoader.Companion)
         every { MoviesLoader.create(any(), any()) } returns moviesLoader
 
-        testMoviesStateFlow =
-            MutableStateFlow(LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false)))
-        every { moviesLoader.stateFlow } returns testMoviesStateFlow
+        testMoviesLoadingStateFlow = MutableStateFlow(LoadingState.Idle(MoviesLoaderState.Empty))
+        every { moviesLoader.stateFlow } returns testMoviesLoadingStateFlow
+    }
+
+    @After
+    fun tearDown() {
+        unmockkObject(MoviesLoader.Companion)
     }
 
     private fun subject() = MovieListViewModel(
@@ -89,30 +96,51 @@ class MovieListViewModelTest : ViewModelTest() {
 
     @Test
     fun `WHEN MoviesLoader emits state THEN subject emits state`() = runBlockingTest {
-        val testMovieList = listOf<Movie>(
-            mockk(),
-            mockk(),
-        )
-        val loadingState1 = LoadingState.Loading(
-            MoviesState(
-                movies = testMovieList,
-                hasMore = true,
+        mockkStatic("amaterek.movie.app.ui.common.model.UiMovieKt") {
+            val testMovieList = listOf<Movie>(mockk(), mockk())
+            val testUiMovieList = listOf<UiMovie>(mockk(), mockk())
+            val loadingState1 = LoadingState.Loading(
+                MoviesLoaderState(
+                    movies = testMovieList,
+                    loadedPages = 0,
+                    totalPages = 0,
+                )
             )
-        )
-        val loadingState2 = LoadingState.Failure(
-            MoviesState(
-                movies = testMovieList,
-                hasMore = false,
-            ),
-            cause = mockk()
-        )
-        subject().moviesFlow.verify(this@runBlockingTest) {
-            verifyItem(LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false)))
-            verifyItem(loadingState1)
-            verifyItem(loadingState2)
-        }
+            val loadingState2 = LoadingState.Failure(
+                MoviesLoaderState(
+                    movies = testMovieList,
+                    loadedPages = 0,
+                    totalPages = 0,
+                ),
+                cause = mockk()
+            )
 
-        testMoviesStateFlow.emit(loadingState1)
-        testMoviesStateFlow.emit(loadingState2)
+            every { testMovieList.toUiModel() } returns testUiMovieList
+
+
+            subject().stateFlow.verify(this) {
+                verifyItem(
+                    MovieListState(
+                        movies = emptyList(),
+                        loadingState = LoadingState.Idle(Unit)
+                    )
+                )
+                verifyItem(
+                    MovieListState(
+                        movies = testUiMovieList,
+                        loadingState = LoadingState.Loading(Unit)
+                    )
+                )
+                verifyItem(
+                    MovieListState(
+                        movies = testUiMovieList,
+                        loadingState = LoadingState.Failure(Unit, loadingState2.cause),
+                    )
+                )
+            }
+
+            testMoviesLoadingStateFlow.value = loadingState1
+            testMoviesLoadingStateFlow.value = loadingState2
+        }
     }
 }

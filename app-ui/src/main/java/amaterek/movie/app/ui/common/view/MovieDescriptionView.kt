@@ -1,7 +1,7 @@
 package amaterek.movie.app.ui.common.view
 
 import amaterek.movie.app.ui.R
-import amaterek.movie.domain.model.MovieDetails
+import amaterek.movie.app.ui.common.model.UiMovieDetails
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.TextUnit
 
 @Composable
 internal fun MovieDescriptionView(
-    movieDetails: MovieDetails,
+    movieDetails: UiMovieDetails,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight = FontWeight.Bold,

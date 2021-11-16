@@ -3,8 +3,10 @@ package amaterek.movie.app.ui.moviedetails
 import amaterek.base.android.viewmodel.BaseViewModel
 import amaterek.base.log.Log
 import amaterek.base.logTag
+import amaterek.movie.app.ui.common.model.UiMovieDetails
+import amaterek.movie.app.ui.common.model.toUiModel
 import amaterek.movie.base.LoadingState
-import amaterek.movie.base.copy
+import amaterek.movie.base.transformValue
 import amaterek.movie.domain.common.FailureCause
 import amaterek.movie.domain.common.QueryResult
 import amaterek.movie.domain.model.MovieDetails
@@ -27,7 +29,7 @@ internal class MovieDetailsViewModel @Inject constructor(
     observeFavoriteMoviesUseCase: ObserveFavoriteMoviesUseCase,
 ) : BaseViewModel() {
 
-    private val _movieFlow = MutableStateFlow<LoadingState<MovieDetails?>>(
+    private val _movieFlow = MutableStateFlow<LoadingState<UiMovieDetails?>>(
         LoadingState.Idle(null)
     )
     val movieFlow = _movieFlow.asStateFlow()
@@ -51,7 +53,7 @@ internal class MovieDetailsViewModel @Inject constructor(
     }
 
     private fun handleMovieDetails(movieDetails: MovieDetails) {
-        _movieFlow.value = LoadingState.Idle(movieDetails)
+        _movieFlow.value = LoadingState.Idle(movieDetails.toUiModel())
     }
 
     private fun handleMovieDetailsError(failureCause: FailureCause) {
@@ -62,7 +64,7 @@ internal class MovieDetailsViewModel @Inject constructor(
         Log.v(logTag(), "toggleFavorite")
         movieFlow.value.value?.let {
             viewModelScope.launch {
-                setFavouriteMovieUseCase(it.movie, !it.movie.isFavorite)
+                setFavouriteMovieUseCase(it.movie.id, !it.movie.isFavorite)
             }
         }
     }
@@ -71,9 +73,9 @@ internal class MovieDetailsViewModel @Inject constructor(
         movieFlow.value.value?.let {
             val isFavorite = favoriteMoviesIds.contains(it.movie.id)
             if (isFavorite != it.movie.isFavorite) {
-                _movieFlow.value = movieFlow.value.copy(
-                    newValue = it.copy(movie = it.movie.copy(isFavorite = isFavorite))
-                )
+                _movieFlow.value = movieFlow.value.transformValue {
+                    it.copy(movie = it.movie.copy(isFavorite = isFavorite))
+                }
             }
         }
     }

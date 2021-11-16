@@ -3,9 +3,9 @@ package amaterek.movie.app.ui.searchmovies
 import amaterek.base.log.Log
 import amaterek.movie.app.ui.R
 import amaterek.movie.app.ui.common.defaultPadding
+import amaterek.movie.app.ui.common.model.UiMovie
 import amaterek.movie.app.ui.common.view.LoadingStateIcon
 import amaterek.movie.base.LoadingState
-import amaterek.movie.domain.model.Movie
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,15 +27,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun SearchMoviesView(
-    moviesSearchState: MovieSearchState,
+internal fun SearchMoviesView(
+    moviesSearchState: SearchMoviesState,
     modifier: Modifier = Modifier,
     onSearchPhraseChange: (String) -> Unit,
-    onMovieClick: (Movie) -> Unit,
+    onMovieClick: (UiMovie) -> Unit,
 ) {
     Log.v("ComposeRender", "SearchMoviesView")
-
-    val isError = moviesSearchState.moviesState is LoadingState.Failure
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -57,7 +55,7 @@ fun SearchMoviesView(
                     ),
                 maxLines = 1,
                 value = moviesSearchState.phrase,
-                isError = isError,
+                isError = moviesSearchState.loadingState is LoadingState.Failure,
                 onValueChange = {
                     onSearchPhraseChange(it)
                 },
@@ -67,7 +65,7 @@ fun SearchMoviesView(
                 trailingIcon = {
                     LoadingStateIcon(
                         imageVector = Icons.Filled.Search,
-                        loadingState = moviesSearchState.moviesState,
+                        loadingState = moviesSearchState.loadingState,
                     )
                 },
                 colors = outlinedTextFieldColors(
@@ -79,14 +77,13 @@ fun SearchMoviesView(
             )
         }
 
-        val movies = moviesSearchState.moviesState.value.movies
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            items(movies.size) {
-                val movie = movies[it]
-                MovieSearchItemView(
+            items(moviesSearchState.movies.size) {
+                val movie = moviesSearchState.movies[it]
+                SearchMoviesListItemView(
                     movie = movie,
                     modifier = Modifier
                         .clickable { onMovieClick(movie) }

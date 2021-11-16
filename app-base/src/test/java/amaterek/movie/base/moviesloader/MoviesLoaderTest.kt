@@ -36,17 +36,17 @@ class MoviesLoaderTest : CoroutineTest() {
     }
 
     @Test
-    fun `WHEN use case response is successful for all pages THEN calling loadMore triggers emitting proper MoviesState`() =
+    fun `WHEN use case's response is successful for all pages THEN calling loadMore triggers emitting proper MoviesLoaderState`() =
         runBlockingTest {
             val moviesPage1 = MovieList(
                 items = listOf(mockk(), mockk()),
                 loadedPages = 1,
-                totalPages = 2
+                totalPages = 2,
             )
             val moviesPage2 = MovieList(
                 items = listOf(mockk(), mockk()),
                 loadedPages = 2,
-                totalPages = 2
+                totalPages = 2,
             )
             coEvery { getMoviesPageUseCase(movieQuery, page = 1) } returns
                     QueryResult.Success(moviesPage1)
@@ -55,44 +55,64 @@ class MoviesLoaderTest : CoroutineTest() {
 
             subject.stateFlow.verify(this) {
                 verifyItem(
-                    LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
-                )
-                verifyItem(
-                    LoadingState.Loading(MoviesState(movies = emptyList(), hasMore = false))
-                )
-                verifyItem(
-                    LoadingState.Idle(MoviesState(movies = moviesPage1.items, hasMore = true))
+                    LoadingState.Idle(
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
+                        )
+                    )
                 )
                 verifyItem(
                     LoadingState.Loading(
-                        MoviesState(
-                            movies = moviesPage1.items,
-                            hasMore = true
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
                         )
                     )
                 )
                 verifyItem(
                     LoadingState.Idle(
-                        MoviesState(
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        )
+                    )
+                )
+                verifyItem(
+                    LoadingState.Loading(
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        )
+                    )
+                )
+                verifyItem(
+                    LoadingState.Idle(
+                        MoviesLoaderState(
                             movies = moviesPage1.items + moviesPage2.items,
-                            hasMore = false
+                            loadedPages = 2,
+                            totalPages = 2,
                         )
                     )
                 )
             }
 
-
+            subject.loadMore()
             subject.loadMore()
             subject.loadMore()
         }
 
     @Test
-    fun `WHEN use case response is failure for an pages THEN calling loadMore triggers emitting proper MoviesState`() =
+    fun `WHEN use case response is failure for an pages THEN calling loadMore triggers emitting proper MoviesLoaderState`() =
         runBlockingTest {
             val moviesPage1 = MovieList(
                 items = listOf(mockk(), mockk()),
                 loadedPages = 1,
-                totalPages = 2
+                totalPages = 2,
             )
             val testFailureCase = mockk<FailureCause>()
             coEvery { getMoviesPageUseCase(movieQuery, page = 1) } returns
@@ -102,20 +122,49 @@ class MoviesLoaderTest : CoroutineTest() {
 
             subject.stateFlow.verify(this) {
                 verifyItem(
-                    LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
+                    LoadingState.Idle(
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
+                        )
+                    )
                 )
                 verifyItem(
-                    LoadingState.Loading(MoviesState(movies = emptyList(), hasMore = false))
+                    LoadingState.Loading(
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
+                        )
+                    )
                 )
                 verifyItem(
-                    LoadingState.Idle(MoviesState(movies = moviesPage1.items, hasMore = true))
+                    LoadingState.Idle(
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        )
+                    )
                 )
                 verifyItem(
-                    LoadingState.Loading(MoviesState(movies = moviesPage1.items, hasMore = true))
+                    LoadingState.Loading(
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        )
+                    )
                 )
                 verifyItem(
                     LoadingState.Failure(
-                        MoviesState(movies = moviesPage1.items, hasMore = true), testFailureCase
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        ),
+                        testFailureCase
                     )
                 )
             }
@@ -125,7 +174,7 @@ class MoviesLoaderTest : CoroutineTest() {
         }
 
     @Test
-    fun `WHEN setFavoriteMoviesIds is called THEN then updates Movie's isFavorite and emits proper MoviesState`() =
+    fun `WHEN setFavoriteMoviesIds is called THEN then updates Movie's isFavorite and emits proper MoviesLoaderState`() =
         runBlockingTest {
             val testMovies = listOf(
                 Movie(
@@ -169,23 +218,42 @@ class MoviesLoaderTest : CoroutineTest() {
 
             subject.stateFlow.verify(this) {
                 verifyItem(
-                    LoadingState.Idle(MoviesState(movies = emptyList(), hasMore = false))
+                    LoadingState.Idle(
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
+                        )
+                    )
                 )
                 verifyItem(
-                    LoadingState.Loading(MoviesState(movies = emptyList(), hasMore = false))
-                )
-                verifyItem(
-                    LoadingState.Idle(MoviesState(movies = moviesPage1.items, hasMore = true))
+                    LoadingState.Loading(
+                        MoviesLoaderState(
+                            movies = emptyList(),
+                            loadedPages = 0,
+                            totalPages = -1,
+                        )
+                    )
                 )
                 verifyItem(
                     LoadingState.Idle(
-                        MoviesState(
+                        MoviesLoaderState(
+                            movies = moviesPage1.items,
+                            loadedPages = 1,
+                            totalPages = 2,
+                        )
+                    )
+                )
+                verifyItem(
+                    LoadingState.Idle(
+                        MoviesLoaderState(
                             movies = listOf(
                                 testMovies[0].copy(isFavorite = true),
                                 testMovies[1].copy(isFavorite = false),
                                 testMovies[2]
                             ),
-                            hasMore = true
+                            loadedPages = 1,
+                            totalPages = 2,
                         )
                     )
                 )

@@ -2,7 +2,7 @@ package amaterek.movie.app.ui.common.view
 
 import amaterek.base.log.Log
 import amaterek.movie.app.ui.common.defaultPadding
-import amaterek.movie.domain.model.Movie
+import amaterek.movie.app.ui.common.model.UiMovie
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import coil.compose.rememberImagePainter
 
 @Composable
 internal fun MoviePosterView(
-    movie: Movie,
+    movie: UiMovie,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -10,9 +10,9 @@ sealed interface LoadingState<out T> {
     data class Failure<T>(override val value: T, val cause: FailureCause) : LoadingState<T>
 }
 
-fun <T> LoadingState<T>.copy(newValue: T): LoadingState<T> =
+fun <T, R> LoadingState<T>.transformValue(transform: T.() -> R): LoadingState<R> =
     when (this) {
-        is LoadingState.Idle -> copy(value = newValue)
-        is LoadingState.Loading -> copy(value = newValue)
-        is LoadingState.Failure -> copy(value = newValue)
+        is LoadingState.Idle -> LoadingState.Idle(value = value.transform())
+        is LoadingState.Loading -> LoadingState.Loading(value = value.transform())
+        is LoadingState.Failure -> LoadingState.Failure(value = value.transform(), cause = cause)
     }

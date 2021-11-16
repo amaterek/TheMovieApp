@@ -3,7 +3,7 @@ package amaterek.movie.base.moviesloader
 import amaterek.base.log.Log
 import amaterek.base.logTag
 import amaterek.movie.base.LoadingState
-import amaterek.movie.base.copy
+import amaterek.movie.base.transformValue
 import amaterek.movie.domain.common.FailureCause
 import amaterek.movie.domain.common.QueryResult
 import amaterek.movie.domain.model.MovieList
@@ -23,16 +23,20 @@ class MoviesLoader private constructor(
     private var loadedPages = 0
     private var totalPages = -1
 
-    private var state = MoviesState(movies = emptyList(), hasMore = false)
-    private val _stateFlow = MutableStateFlow<LoadingState<MoviesState>>(
+    private var state = MoviesLoaderState.Empty
+    private val _stateFlow = MutableStateFlow<LoadingState<MoviesLoaderState>>(
         LoadingState.Idle(state)
     )
     val stateFlow = _stateFlow.asStateFlow()
     private var favoriteMoviesIds = emptySet<Long>()
 
     suspend fun loadMore() = mutex.withLock {
-        _stateFlow.value = LoadingState.Loading(state)
         val page = loadedPages + 1
+        if (totalPages >= 0 && page > totalPages) {
+            Log.d(logTag(), "loadMore: there is no more pages requested page=$page pages:$totalPages")
+            return
+        }
+        _stateFlow.value = LoadingState.Loading(state)
         val result = getMoviesPageUseCase(
             query = query,
             page = page,
@@ -44,7 +48,7 @@ class MoviesLoader private constructor(
     }
 
     private fun onPageLoadSuccess(page: Int, result: MovieList) {
-        Log.i(logTag(), "Movie's page=$page loaded success")
+        Log.d(logTag(), "Movie's page=$page loaded success")
         if (result.loadedPages != page) {
             Log.w(logTag(), "Movie's loaded pages has changed $page -> ${result.loadedPages}")
         }
@@ -54,9 +58,10 @@ class MoviesLoader private constructor(
         loadedPages = result.loadedPages
         totalPages = result.totalPages
 
-        state = MoviesState(
+        state = MoviesLoaderState(
             movies = state.movies + result.items,
-            hasMore = loadedPages < totalPages,
+            loadedPages = loadedPages,
+            totalPages = totalPages,
         )
         _stateFlow.value = LoadingState.Idle(state)
     }
@@ -79,7 +84,7 @@ class MoviesLoader private constructor(
         }
         if (hasChanged) {
             state = state.copy(movies = movies)
-            _stateFlow.value = stateFlow.value.copy(state)
+            _stateFlow.value = stateFlow.value.transformValue { state }
         }
     }
 

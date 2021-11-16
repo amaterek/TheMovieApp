@@ -1,10 +1,10 @@
 package amaterek.movie.app.ui.movielist
 
 import amaterek.movie.app.ui.R
+import amaterek.movie.app.ui.common.model.UiMovie
 import amaterek.movie.app.ui.common.view.LoadingStateView
-import amaterek.movie.app.ui.searchmovies.SearchMovieDialog
+import amaterek.movie.app.ui.searchmovies.SearchMoviesDialog
 import amaterek.movie.base.LoadingState
-import amaterek.movie.domain.model.Movie
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,16 +27,16 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MovieListScreen(
-    onMovieClick: (Movie) -> Unit,
+    onMovieClick: (UiMovie) -> Unit,
 ) {
 
     val viewModel = hiltViewModel<MovieListViewModel>()
 
-    val moviesState = viewModel.moviesFlow.collectAsState()
+    val movieListState = viewModel.stateFlow.collectAsState()
 
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
-    val swipeRefreshState = rememberSwipeRefreshState(moviesState is LoadingState.Loading<*>)
+    val swipeRefreshState = rememberSwipeRefreshState(movieListState is LoadingState.Loading<*>)
 
     SwipeRefresh(
         state = swipeRefreshState,
@@ -69,7 +69,7 @@ fun MovieListScreen(
                 }
             ) {
                 MovieListView(
-                    moviesState = moviesState.value.value,
+                    movies = movieListState.value.movies,
                     modifier = Modifier.fillMaxSize(),
                     onLoadMore = { viewModel.requestLoadMore() },
                     onMovieClick = onMovieClick,
@@ -79,13 +79,13 @@ fun MovieListScreen(
     }
 
     LoadingStateView(
-        moviesState.value,
+        movieListState.value.loadingState,
         modifier = Modifier
             .fillMaxWidth()
             .height(2.dp),
     )
 
-    SearchMovieDialog(
+    SearchMoviesDialog(
         onMovieClick = onMovieClick,
         showDialog = showDialog.value,
         onDismissRequest = { showDialog.value = false }

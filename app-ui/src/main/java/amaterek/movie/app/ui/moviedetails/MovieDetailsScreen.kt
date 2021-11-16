@@ -24,7 +24,7 @@ fun MovieDetailsScreen(movieId: Long) {
         viewModel.setMovieId(movieId = movieId, reload = false)
     }
 
-    val moviesState = viewModel.movieFlow.collectAsState()
+    val moviesLoaderState = viewModel.movieFlow.collectAsState()
     val scrollState = rememberScrollState(0)
 
     SwipeRefresh(
@@ -36,7 +36,7 @@ fun MovieDetailsScreen(movieId: Long) {
                 .fillMaxSize()
                 .verticalScroll(state = scrollState)
         ) {
-            moviesState.value.value?.let {
+            moviesLoaderState.value.value?.let {
                 MovieDetailsView(
                     movieDetails = it,
                     modifier = Modifier.fillMaxSize(),
@@ -49,7 +49,7 @@ fun MovieDetailsScreen(movieId: Long) {
     }
 
     LoadingStateView(
-        moviesState.value,
+        moviesLoaderState.value,
         modifier = Modifier
             .fillMaxWidth()
             .height(2.dp),

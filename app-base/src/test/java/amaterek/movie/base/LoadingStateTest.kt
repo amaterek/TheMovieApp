@@ -8,33 +8,36 @@ import kotlin.test.assertEquals
 class LoadingStateTest {
 
     @Test
-    fun `WHEN state is Idle THEN copies the state with new value`() {
-        val testState = LoadingState.Idle(mockk<Any>())
-        val newValue = mockk<Any>()
+    fun `WHEN state is Idle THEN transforms the state`() {
+        val testValue = mockk<Any>()
+        val testState = LoadingState.Idle(testValue)
+        val transformedValue = mockk<Any>()
         assertEquals(
-            LoadingState.Idle(newValue),
-            testState.copy(newValue)
+            LoadingState.Idle(transformedValue),
+            testState.transformValue { if (this == testValue) transformedValue else mockk() }
         )
     }
 
     @Test
-    fun `WHEN state is Loading THEN copies the state with new value`() {
-        val testState = LoadingState.Loading(mockk<Any>())
-        val newValue = mockk<Any>()
+    fun `WHEN state is Loading THEN transforms the state`() {
+        val testValue = mockk<Any>()
+        val testState = LoadingState.Loading(testValue)
+        val transformedValue = mockk<Any>()
         assertEquals(
-            LoadingState.Loading(newValue),
-            testState.copy(newValue)
+            LoadingState.Loading(transformedValue),
+            testState.transformValue { if (this == testValue) transformedValue else mockk() }
         )
     }
 
     @Test
-    fun `WHEN state is Failure THEN copies the state with new value`() {
+    fun `WHEN state is Failure THEN transforms the state`() {
         val testCause = mockk<FailureCause>()
-        val testState = LoadingState.Failure(mockk<Any>(), testCause)
-        val newValue = mockk<Any>()
+        val testValue = mockk<Any>()
+        val testState = LoadingState.Failure(testValue, testCause)
+        val transformedValue = mockk<Any>()
         assertEquals(
-            LoadingState.Failure(newValue, testCause),
-            testState.copy(newValue)
+            LoadingState.Failure(transformedValue, testCause),
+            testState.transformValue { if (this == testValue) transformedValue else mockk() }
         )
     }
 }

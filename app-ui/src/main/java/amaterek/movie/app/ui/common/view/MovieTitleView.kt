@@ -1,8 +1,8 @@
 package amaterek.movie.app.ui.common.view
 
 import amaterek.movie.app.ui.R
+import amaterek.movie.app.ui.common.model.UiMovie
 import amaterek.movie.base.date.dateOf
-import amaterek.movie.domain.model.Movie
 import amaterek.movie.domain.model.MovieRating
 import android.annotation.SuppressLint
 import androidx.compose.material.Text
@@ -22,7 +22,7 @@ private fun Date?.formatDate(dateFormat: DateFormat): String =
 
 @Composable
 internal fun MovieTitleView(
-    movie: Movie,
+    movie: UiMovie,
     dateFormat: DateFormat,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -41,12 +41,12 @@ internal fun MovieTitleView(
 @Composable
 internal fun MovieTitleViewPreview() {
     MovieTitleView(
-        movie = Movie(
+        movie = UiMovie(
             id = 1,
             title = "Matrix",
             rating = MovieRating(0),
             genres = emptyList(),
-            releaseDate =  dateOf(2011, 7, 21),
+            releaseDate = dateOf(2011, 7, 21),
             posterUrl = "",
             backdropUrl = "",
             isFavorite = true,
