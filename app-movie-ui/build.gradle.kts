@@ -8,7 +8,6 @@ dependencies {
     implementation(project(":app-base"))
     implementation(project(":app-theme"))
     implementation(Libs.Coil.compose)
-    implementation(Libs.GoogleAccompanist.swipeRefresh)
     implementation(Libs.ThirdParty.gowthamComposeRatingbar)
     implementation(Libs.ThirdParty.oneboneComposeToolbar)
 

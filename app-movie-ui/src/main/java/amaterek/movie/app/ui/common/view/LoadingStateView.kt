@@ -2,6 +2,7 @@ package amaterek.movie.app.ui.common.view
 
 import amaterek.movie.base.LoadingState
 import amaterek.movie.domain.common.FailureCause
+import amaterek.movie.theme.LoadingIndicatorColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +24,7 @@ internal fun LoadingStateView(
             is LoadingState.Idle<*> -> Unit
             is LoadingState.Loading<*> -> LinearProgressIndicator(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.secondary
+                color = LoadingIndicatorColor
             )
             is LoadingState.Failure<*> -> {
                 Box(

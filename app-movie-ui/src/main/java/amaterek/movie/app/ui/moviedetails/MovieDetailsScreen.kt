@@ -1,20 +1,22 @@
 package amaterek.movie.app.ui.moviedetails
 
 import amaterek.movie.app.ui.common.view.LoadingStateView
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import amaterek.movie.app.ui.movielist.SwipeRefreshTrigger
+import amaterek.movie.base.compose.biswiperefresh.BiSwipeRefresh
+import amaterek.movie.base.compose.biswiperefresh.BiSwipeRefreshIndicator
+import amaterek.movie.base.compose.biswiperefresh.BiSwipeRefreshOverscrollIndicator
+import amaterek.movie.base.compose.biswiperefresh.rememberBiSwipeRefreshState
+import amaterek.movie.theme.LoadingIndicatorAlignment
+import amaterek.movie.theme.LoadingIndicatorHeight
+import amaterek.movie.theme.LoadingIndicatorPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun MovieDetailsScreen(movieId: Long) {
@@ -26,13 +28,34 @@ fun MovieDetailsScreen(movieId: Long) {
 
     val moviesLoaderState = viewModel.movieFlow.collectAsState()
     val scrollState = rememberScrollState(0)
+    val overscrollState = remember { mutableStateOf(0.dp) }
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = false),
-        onRefresh = { viewModel.setMovieId(movieId = movieId, reload = true) }) {
-
+    BiSwipeRefresh(
+        state = rememberBiSwipeRefreshState(isRefreshing = false),
+        onRefresh = { viewModel.setMovieId(movieId = movieId, reload = true) },
+        topRefreshTriggerDistance = SwipeRefreshTrigger,
+        bottomRefreshTriggerDistance = 0.dp,
+        indicator = { state, _, _ ->
+            BiSwipeRefreshOverscrollIndicator(
+                state = state,
+                overscrollState = overscrollState,
+                bottomIndicatorEnabled = false,
+            ) {
+                BiSwipeRefreshIndicator(
+                    state = state,
+                    refreshTrigger = SwipeRefreshTrigger,
+                    showLoadingIndicator = false,
+                    modifier = Modifier
+                        .padding(LoadingIndicatorPadding)
+                        .size(LoadingIndicatorHeight)
+                        .align(LoadingIndicatorAlignment),
+                )
+            }
+        }
+    ) {
         Surface(
             modifier = Modifier
+                .offset(x = 0.dp, y = maxOf(overscrollState.value, 0.dp))
                 .fillMaxSize()
                 .verticalScroll(state = scrollState)
         ) {

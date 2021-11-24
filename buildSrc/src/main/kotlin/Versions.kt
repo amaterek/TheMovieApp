@@ -6,7 +6,7 @@ object Versions {
         // https://developer.android.com/jetpack/androidx/versions
         const val activity = "1.4.0"
         const val appcompat = "1.4.0-rc01"
-        const val compose = "1.1.0-beta02"
+        const val compose = "1.1.0-beta03"
         const val coreKtx = "1.7.0"
         const val fragment = "1.4.0-rc01"
         const val hilt = "1.0.0" // https://developer.android.com/jetpack/androidx/releases/hilt
