@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Romove VERBOSE and DEBUG logs
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+}
+
+-assumenosideeffects class amaterek.base.log.Log {
+    public void v(...);
+    public void d(...);
+}
