@@ -13,6 +13,7 @@ internal val DarkColorPalette = darkColors(
     primary = AppColor.tmdbDarkBlue,
     onPrimary = Color.LightGray,
     surface = AppColor.tmdbDarkBlue,
+    onSurface = Color.LightGray,
     secondary = AppColor.tmdbLightBlue,
     error = AppColor.error,
 )
@@ -23,6 +24,7 @@ internal val LightColorPalette = lightColors(
     primary = AppColor.tmdbDarkBlue,
     onPrimary = Color.LightGray,
     surface = Color.White,
+    onSurface = Color.Black,
     secondary = AppColor.tmdbLightBlue,
     error = AppColor.error,
 )

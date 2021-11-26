@@ -30,12 +30,18 @@
     <string name="movie_genre_western">Western</string>
 
     <string name="load_more_movies_button">Tap here to load more</string>
-
     <string name="movie_unknown_date">Unknown</string>
 
+    <string name="movie_list_category_content_description">Category</string>
     <string name="movie_list_search_content_description">Search</string>
     <string name="movie_list_favorite_description">Favorite star</string>
     <string name="movie_list_search_hint">Type to search</string>
+
+    <string name="movie_list_category_now_playing">Now playing</string>
+    <string name="movie_list_category_popular">Popular</string>
+    <string name="movie_list_category_top_rated">Top rated</string>
+    <string name="movie_list_category_upcoming">Upcoming</string>
+    <string name="movie_list_category_favorite">Favorite</string>
 
     <string name="movie_details_description">Overview</string>
     <string name="movie_details_budget">Budget: %1$.1f mln &#36;</string>

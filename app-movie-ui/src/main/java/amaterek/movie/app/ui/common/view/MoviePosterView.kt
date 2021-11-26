@@ -23,6 +23,8 @@ internal fun MoviePosterView(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Log.v("ComposeRender", "MoviePosterView: ${movie.id}")
+
     val posterImagePainter = rememberImagePainter(movie.posterUrl) {
         crossfade(true)
     }

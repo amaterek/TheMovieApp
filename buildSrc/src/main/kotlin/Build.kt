@@ -10,6 +10,7 @@ object Build {
         "-Xopt-in=kotlinx.coroutines.FlowPreview",
         "-Xopt-in=kotlin.time.ExperimentalTime",
         "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+        "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
         "-Xallow-unstable-dependencies",
         "-P",
         "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true" // TODO remove!!!

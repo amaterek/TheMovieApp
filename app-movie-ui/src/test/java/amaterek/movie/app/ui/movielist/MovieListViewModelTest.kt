@@ -4,6 +4,7 @@ import amaterek.base.test.android.ViewModelTest
 import amaterek.base.test.coVerifyCalledOnes
 import amaterek.base.test.verify
 import amaterek.movie.app.ui.common.model.UiMovie
+import amaterek.movie.app.ui.common.model.UiMovieCategory
 import amaterek.movie.app.ui.common.model.toUiModel
 import amaterek.movie.base.LoadingState
 import amaterek.movie.base.moviesloader.MoviesLoader
@@ -60,15 +61,17 @@ class MovieListViewModelTest : ViewModelTest() {
         observeFavoriteMoviesUseCase = observeFavoriteMoviesUseCase,
     )
 
+    private val defaultQuery = MovieQuery(
+        type = MovieQuery.Type.ByCategory(MovieCategory.NOW_PLAYING),
+        sortBy = MovieQuery.SortBy.POPULARITY_DESCENDING,
+        genres = emptySet(),
+    )
+
+    private val defaultUiCategory = UiMovieCategory.NOW_PLAYING
+
     @Test
     fun `WHEN instance is created THEN creates MoviesLoader with default query`() =
         runBlockingTest {
-            val defaultQuery = MovieQuery(
-                type = MovieQuery.Type.ByCategory(MovieCategory.NOW_PLAYING),
-                sortBy = MovieQuery.SortBy.POPULARITY_DESCENDING,
-                genres = emptySet(),
-            )
-
             subject()
 
             verify {
@@ -121,18 +124,21 @@ class MovieListViewModelTest : ViewModelTest() {
             subject().stateFlow.verify(this) {
                 verifyItem(
                     MovieListState(
+                        category = defaultUiCategory,
                         movies = emptyList(),
                         loadingState = LoadingState.Idle(Unit)
                     )
                 )
                 verifyItem(
                     MovieListState(
+                        category = defaultUiCategory,
                         movies = testUiMovieList,
                         loadingState = LoadingState.Loading(Unit)
                     )
                 )
                 verifyItem(
                     MovieListState(
+                        category = defaultUiCategory,
                         movies = testUiMovieList,
                         loadingState = LoadingState.Failure(Unit, loadingState2.cause),
                     )
@@ -143,4 +149,46 @@ class MovieListViewModelTest : ViewModelTest() {
             testMoviesLoadingStateFlow.value = loadingState2
         }
     }
+
+    @Test
+    fun `WHEN setCategory is called with new one THEN new MoviesLoader is created and loadMore is called on it`() =
+        runBlockingTest {
+            val newQuery =
+                defaultQuery.copy(type = MovieQuery.Type.ByCategory(MovieCategory.POPULAR))
+            val newMoviesLoader = mockk<MoviesLoader>()
+            every { newMoviesLoader.stateFlow } returns testMoviesLoadingStateFlow
+            coEvery { newMoviesLoader.loadMore() } just runs
+
+            every {
+                MoviesLoader.create(
+                    query = newQuery,
+                    getMoviesPageUseCase = getMoviesPageUseCase,
+                )
+            } returns newMoviesLoader
+
+            subject().setCategory(UiMovieCategory.POPULAR)
+
+            verify {
+                MoviesLoader.create(
+                    query = newQuery,
+                    getMoviesPageUseCase = getMoviesPageUseCase,
+                )
+            }
+            coVerify { newMoviesLoader.loadMore() }
+        }
+
+    @Test
+    fun `WHEN setCategory is called with the same one THEN does nothing`() =
+        runBlockingTest {
+            subject().apply {
+                every {
+                    MoviesLoader.create(
+                        query = any(),
+                        getMoviesPageUseCase = any(),
+                    )
+                } throws Exception("Test failed")
+
+                setCategory(defaultUiCategory)
+            }
+        }
 }
