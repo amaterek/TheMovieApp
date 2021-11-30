@@ -2,7 +2,6 @@ package amaterek.movie.app.ui.splash
 
 import amaterek.movie.app.ui.splash.SplashViewModel.Event.*
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier

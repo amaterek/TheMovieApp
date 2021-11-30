@@ -29,7 +29,6 @@
     <string name="movie_genre_war">War</string>
     <string name="movie_genre_western">Western</string>
 
-    <string name="load_more_movies_button">Tap here to load more</string>
     <string name="movie_unknown_date">Unknown</string>
 
     <string name="movie_list_category_content_description">Category</string>
